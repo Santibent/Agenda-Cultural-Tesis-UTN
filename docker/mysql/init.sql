@@ -181,7 +181,7 @@ INSERT INTO categorias (nombre, slug, descripcion, color, icono, orden) VALUES
 
 
 INSERT INTO usuarios (nombre, email, password, rol, email_verificado, activo) VALUES
-('Administrador', 'admin@agendacultural.com', '$2b$10$gOSg///ULn6aWDd21J45de0jC9p.jz9LO6eKWI1Sg54.zQ5Ebzgx2', 'admin', TRUE, TRUE);
+('Administrador', 'admin@agendacultural.com', '', 'admin', TRUE, TRUE);
 
 
 ALTER TABLE eventos ADD INDEX idx_fecha_categoria (fecha_inicio, categoria_id);
