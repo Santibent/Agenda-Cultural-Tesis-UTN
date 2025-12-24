@@ -1,0 +1,225 @@
+.hero-section {
+  min-height: 80vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.gif-grid {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(3, 1fr);
+  z-index: 0;
+  overflow: hidden; // Evitar que imágenes causen scroll
+  contain: strict; // Contención estricta para aislar completamente
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out; // Transición suave de 1.5 segundos
+  pointer-events: none;
+
+  &.visible {
+    opacity: 1;
+  }
+
+  // Asegurar que la capa 2 esté sobre la capa 1
+  &.gif-grid-layer-2 {
+    z-index: 1;
+  }
+}
+
+.gif-item {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: 0.8;
+  transition: opacity 0.5s ease-in-out;
+  transform: translateZ(0); // Forzar aceleración por GPU
+  backface-visibility: hidden; // Prevenir glitches visuales
+
+  // Evitar que la carga de GIF cause reflow
+  image-rendering: auto;
+  contain: layout style paint; // Aislar el rendering
+
+  &:hover {
+    opacity: 1;
+  }
+}
+
+.overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1;
+}
+
+.container {
+  position: relative;
+  z-index: 2;
+}
+
+.categoria-card {
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: translateY(-5px);
+
+    .card {
+      background: var(--bs-gray-800) !important;
+    }
+  }
+}
+
+.evento-card {
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 30px rgba(229, 57, 53, 0.3);
+  }
+}
+
+.cta-section {
+  background: linear-gradient(135deg, #E53935 0%, #C62828 100%);
+}
+
+// Figuras flotantes que aparecen al scrollear
+.figuras-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 999; // Aumentar z-index para que esté por encima de todo
+  overflow: visible;
+}
+
+.figura-flotante {
+  position: absolute;
+  width: 200px;
+  height: auto;
+  opacity: 0;
+  transition: all 1.2s cubic-bezier(0.34, 1.56, 0.64, 1); // Efecto bounce
+  pointer-events: none;
+  will-change: transform, opacity;
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.3));
+
+  // Figuras izquierda - posiciones iniciales (más afuera para el efecto)
+  &.izq {
+    left: -300px;
+
+    &.figura-1 { top: 5%; }
+    &.figura-3 { top: 25%; }
+    &.figura-5 { top: 45%; }
+    &.figura-7 { top: 65%; }
+    &.figura-9 { top: 80%; }
+  }
+
+  // Figuras derecha - posiciones iniciales (más afuera para el efecto)
+  &.der {
+    right: -300px;
+
+    &.figura-2 { top: -1%; }  // Alineada con figura-1
+    &.figura-4 { top: 30%; }
+    &.figura-6 { top: 40%; }
+    &.figura-8 { top: 60%; }
+    &.figura-10 { top: 80%; }
+  }
+
+  // Cuando aparecen (scroll reveal) - se asoman más con profundidades variadas
+  &.visible {
+    opacity: 0.9;
+
+    &.izq {
+      // Rotaciones variadas para darle vida y diferentes posiciones (algunas más adentro)
+      &.figura-1 {
+        left: -30px;  // Sobresale mucho más
+        transform: rotate(-8deg) scale(1.1);
+      }
+      &.figura-3 {
+        left: -60px;  // Sobresale menos
+        transform: rotate(5deg) scale(0.9);
+      }
+      &.figura-5 {
+        left: -20px;  // Sobresale mucho
+        transform: rotate(-12deg) scale(1.05);
+      }
+      &.figura-7 {
+        left: -70px;  // Sobresale poco
+        transform: rotate(6deg) scale(0.95);
+      }
+      &.figura-9 {
+        left: -40px;  // Sobresale medio
+        transform: rotate(-5deg) scale(1);
+      }
+    }
+
+    &.der {
+      // Diferentes posiciones para crear profundidad (algunas más adentro)
+      &.figura-2 {
+        right: -35px;  // Sobresale mucho más
+        transform: rotate(10deg) scale(1);
+      }
+      &.figura-4 {
+        right: -60px;  // Sobresale menos
+        transform: rotate(-7deg) scale(1.1);
+      }
+      &.figura-6 {
+        right: -25px;  // Sobresale mucho
+        transform: rotate(8deg) scale(0.9);
+      }
+      &.figura-8 {
+        right: -65px;  // Sobresale poco
+        transform: rotate(-10deg) scale(1.05);
+      }
+      &.figura-10 {
+        right: -45px;  // Sobresale medio
+        transform: rotate(6deg) scale(0.95);
+      }
+    }
+  }
+
+  // Hover effect
+  &:hover {
+    opacity: 1 !important;
+    transform: scale(1.15) !important;
+    filter: drop-shadow(0 15px 30px rgba(229, 57, 53, 0.5));
+  }
+}
+
+// Responsive: ajustar tamaño en tablets
+@media (max-width: 1024px) {
+  .figura-flotante {
+    width: 150px;
+
+    &.izq.visible { left: -80px; }
+    &.der.visible { right: -80px; }
+  }
+}
+
+// Responsive: ocultar en móviles
+@media (max-width: 768px) {
+  .figuras-container {
+    display: none;
+  }
+}
+
+.gif-fondo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url('/gifs/gatofondo.gif') center center / cover no-repeat;
+  z-index: 0;
+  opacity: 0.6; // ajustá según tu preferencia
+  pointer-events: none; // evita interferir con clics
+}
+

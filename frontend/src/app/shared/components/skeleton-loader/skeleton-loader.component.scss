@@ -1,0 +1,136 @@
+@keyframes shimmer {
+  0% {
+    background-position: -1000px 0;
+  }
+  100% {
+    background-position: 1000px 0;
+  }
+}
+
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    #f0f0f0 0%,
+    #e0e0e0 20%,
+    #f0f0f0 40%,
+    #f0f0f0 100%
+  );
+  background-size: 1000px 100%;
+  animation: shimmer 2s infinite linear;
+  display: inline-block;
+  margin-bottom: 0.5rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+// Card skeleton
+.skeleton-card {
+  background: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+  .skeleton-image {
+    width: 100%;
+    height: 200px;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+
+  .skeleton-content {
+    padding: 1.5rem;
+
+    .skeleton-title {
+      height: 1.5rem;
+      width: 70%;
+      margin-bottom: 1rem;
+    }
+
+    .skeleton-text {
+      height: 1rem;
+      width: 100%;
+      margin-bottom: 0.75rem;
+
+      &.short {
+        width: 60%;
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Event card skeleton
+.skeleton-event-card {
+  background: white;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  height: 100%;
+
+  .skeleton-event-image {
+    width: 100%;
+    height: 250px;
+    border-radius: 0;
+    margin-bottom: 0;
+  }
+
+  .skeleton-event-content {
+    padding: 1.25rem;
+
+    .skeleton-badge {
+      height: 1.25rem;
+      width: 80px;
+      border-radius: 1rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .skeleton-event-title {
+      height: 1.5rem;
+      width: 85%;
+      margin-bottom: 1rem;
+    }
+
+    .skeleton-text {
+      height: 0.875rem;
+      width: 100%;
+      margin-bottom: 0.5rem;
+
+      &.short {
+        width: 70%;
+        margin-bottom: 1rem;
+      }
+    }
+
+    .skeleton-event-footer {
+      display: flex;
+      gap: 1rem;
+      margin-top: 1rem;
+
+      .skeleton-icon {
+        height: 1rem;
+        width: 100px;
+        margin-bottom: 0;
+      }
+    }
+  }
+}
+
+// Dark theme support
+@media (prefers-color-scheme: dark) {
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      #2a2a2a 0%,
+      #3a3a3a 20%,
+      #2a2a2a 40%,
+      #2a2a2a 100%
+    );
+  }
+
+  .skeleton-card,
+  .skeleton-event-card {
+    background: #1a1a1a;
+  }
+}

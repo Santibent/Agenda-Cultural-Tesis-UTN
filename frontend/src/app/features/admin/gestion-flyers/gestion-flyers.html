@@ -1,0 +1,100 @@
+<div class="container mt-4">
+  <div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Gestión de Flyers (Portfolio)</h2>
+    <button class="btn btn-primary" (click)="mostrarNuevoFormulario()" *ngIf="!mostrarFormulario()">Nuevo Flyer</button>
+  </div>
+
+  <!-- Formulario -->
+  <div class="card mb-4" *ngIf="mostrarFormulario()">
+    <div class="card-header"><h5>{{ modoEdicion() ? 'Editar Flyer' : 'Nuevo Flyer' }}</h5></div>
+    <div class="card-body">
+      <form [formGroup]="formulario" (ngSubmit)="guardarFlyer()">
+        <div class="row">
+          <div class="col-md-12 mb-3">
+            <label class="form-label">Imagen *</label>
+            <input type="file" class="form-control" accept="image/*" (change)="onImagenSeleccionada($event)" />
+            <small class="text-muted">Formatos: JPG, PNG, WEBP, GIF. Máximo 5MB</small>
+            <div *ngIf="imagenPreview()" class="mt-2">
+              <img [src]="imagenPreview()" alt="Preview" style="max-width: 300px; max-height: 300px;" class="img-thumbnail">
+            </div>
+          </div>
+          <div class="col-md-12 mb-3">
+            <label class="form-label">Título *</label>
+            <input type="text" class="form-control" formControlName="titulo" />
+          </div>
+          <div class="col-md-12 mb-3">
+            <label class="form-label">Descripción</label>
+            <textarea class="form-control" rows="3" formControlName="descripcion"></textarea>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Evento Relacionado</label>
+            <select class="form-select" formControlName="eventoRelacionadoId">
+              <option [value]="null">Sin evento relacionado</option>
+              <option *ngFor="let evento of eventos()" [value]="evento.id">{{ evento.titulo }}</option>
+            </select>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label class="form-label">Etiquetas (separadas por coma)</label>
+            <input type="text" class="form-control" formControlName="etiquetas" placeholder="diseño, concierto" />
+          </div>
+          <div class="col-md-4 mb-3">
+            <label class="form-label">Orden</label>
+            <input type="number" class="form-control" formControlName="orden" />
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="form-check mt-4">
+              <input class="form-check-input" type="checkbox" formControlName="visible" id="visible">
+              <label class="form-check-label" for="visible">Visible</label>
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <div class="form-check mt-4">
+              <input class="form-check-input" type="checkbox" formControlName="destacado" id="destacado">
+              <label class="form-check-label" for="destacado">Destacado</label>
+            </div>
+          </div>
+        </div>
+        <div class="d-flex gap-2">
+          <button type="submit" class="btn btn-primary" [disabled]="cargando()">{{ cargando() ? 'Guardando...' : 'Guardar' }}</button>
+          <button type="button" class="btn btn-secondary" (click)="cancelarFormulario()">Cancelar</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Galería -->
+  <div class="card" *ngIf="!mostrarFormulario()">
+    <div class="card-body">
+      <div *ngIf="cargando()" class="text-center py-5">
+        <div class="spinner-border" role="status"></div>
+        <p class="mt-2">Cargando flyers...</p>
+      </div>
+      <div *ngIf="!cargando() && flyers().length === 0" class="text-center py-5">
+        <p class="text-muted">No hay flyers en el portfolio</p>
+      </div>
+      <div class="row" *ngIf="!cargando() && flyers().length > 0">
+        <div class="col-md-4 col-lg-3 mb-4" *ngFor="let flyer of flyers()">
+          <div class="card h-100">
+            <img [src]="obtenerImagenFlyer(flyer)" class="card-img-top" style="height: 250px; object-fit: cover;" alt="Flyer">
+            <div class="card-body">
+              <h6 class="card-title">{{ flyer.titulo }}</h6>
+              <div class="mb-2">
+                <span class="badge bg-success" *ngIf="flyer.visible">Visible</span>
+                <span class="badge bg-secondary" *ngIf="!flyer.visible">Oculto</span>
+                <span class="badge bg-warning" *ngIf="flyer.destacado">Destacado</span>
+              </div>
+              <small class="text-muted">Orden: {{ flyer.orden }} | Vistas: {{ flyer.vistas }}</small>
+            </div>
+            <div class="card-footer">
+              <div class="btn-group btn-group-sm w-100">
+                <button class="btn btn-outline-primary" (click)="editarFlyer(flyer)">Editar</button>
+                <button class="btn btn-outline-warning" (click)="toggleDestacado(flyer)">⭐</button>
+                <button class="btn btn-outline-danger" (click)="eliminarFlyer(flyer)">🗑️</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

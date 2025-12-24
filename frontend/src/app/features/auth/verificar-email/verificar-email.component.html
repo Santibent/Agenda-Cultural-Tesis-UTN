@@ -1,0 +1,72 @@
+<div class="container min-vh-100 d-flex align-items-center justify-content-center py-5">
+  <div class="row w-100 justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      
+      <!-- Verificando -->
+      @if (verificando()) {
+        <div class="card border-0 shadow-lg">
+          <div class="card-body text-center py-5">
+            <div class="spinner-border text-primary mb-4" style="width: 4rem; height: 4rem;" role="status">
+              <span class="visually-hidden">Verificando...</span>
+            </div>
+            <h3 class="mb-3">Verificando tu email...</h3>
+            <p class="text-muted">Por favor espera un momento</p>
+          </div>
+        </div>
+      }
+
+      <!-- Éxito -->
+      @if (exito()) {
+        <div class="card border-0 shadow-lg">
+          <div class="card-body text-center py-5">
+            <div class="mb-4">
+              <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+            </div>
+            <h2 class="mb-3">¡Email Verificado!</h2>
+            <p class="text-muted mb-4">
+              Tu cuenta ha sido activada exitosamente. 🎉
+            </p>
+            <p class="text-muted mb-4">
+              Serás redirigido automáticamente en unos segundos...
+            </p>
+            <div class="d-grid gap-2">
+              <a routerLink="/" class="btn btn-primary btn-lg">
+                <i class="bi bi-house-fill me-2"></i>
+                Ir al Inicio
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Error -->
+      @if (error() && !verificando()) {
+        <div class="card border-0 shadow-lg">
+          <div class="card-body text-center py-5">
+            <div class="mb-4">
+              <i class="bi bi-x-circle-fill text-danger" style="font-size: 5rem;"></i>
+            </div>
+            <h2 class="mb-3">Error al Verificar</h2>
+            <div class="alert alert-danger mb-4">
+              {{ error() }}
+            </div>
+            <p class="text-muted mb-4">
+              El enlace puede haber expirado o ya haber sido usado.
+            </p>
+            <div class="d-grid gap-2">
+              <a routerLink="/auth/login" class="btn btn-primary btn-lg">
+                <i class="bi bi-box-arrow-in-right me-2"></i>
+                Ir al Login
+              </a>
+              <a routerLink="/auth/registro" class="btn btn-outline-secondary">
+                <i class="bi bi-person-plus me-2"></i>
+                Registrarse Nuevamente
+              </a>
+            </div>
+          </div>
+        </div>
+      }
+
+    </div>
+  </div>
+</div>

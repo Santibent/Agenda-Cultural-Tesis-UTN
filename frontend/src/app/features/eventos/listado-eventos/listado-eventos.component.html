@@ -1,0 +1,278 @@
+<div class="eventos-page bg-dark-custom min-vh-100">
+
+   <!-- Fondo GIF -->
+  <div class="gif-fondo"></div>
+  <!-- Header de la página -->
+  <section class="page-header bg-dark-secondary py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <h1 class="display-4 text-white mb-3">
+            <span class="text-primary-custom">Eventos</span> Culturales
+          </h1>
+          <p class="lead text-muted mb-0">
+            Descubre los mejores eventos de arte, música, teatro y más
+          </p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+          <span class="badge bg-primary fs-6">
+            {{ totalEventos() }} eventos disponibles
+          </span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="container py-5 position-relative eventos-container">
+    <!-- Video de fondo -->
+   
+    <div class="row position-relative">
+      <!-- Sidebar de Filtros -->
+      <aside class="col-lg-3 mb-4">
+        <div class="filters-sidebar bg-dark-secondary p-4 rounded sticky-top" style="top: 100px;">
+          <h5 class="text-white mb-4">
+            <i class="bi bi-funnel me-2"></i>
+            Filtros
+          </h5>
+
+          <!-- Búsqueda -->
+          <div class="mb-4">
+            <label class="form-label text-white small">Buscar</label>
+            <div class="input-group">
+              <input
+                type="text"
+                class="form-control bg-dark text-white border-secondary"
+                placeholder="Buscar eventos..."
+                [(ngModel)]="textoBusqueda"
+                (keyup.enter)="onBuscar()"
+              />
+              <button 
+                class="btn btn-primary" 
+                type="button"
+                (click)="onBuscar()"
+              >
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+
+          <!-- Categorías -->
+          <div class="mb-4">
+            <label class="form-label text-white small">Categoría</label>
+            <div class="list-group list-group-flush">
+              <button
+                class="list-group-item list-group-item-action bg-dark text-white border-secondary d-flex justify-content-between align-items-center"
+                [class.active]="categoriaSeleccionada() === null"
+                (click)="onCategoriaChange(null)"
+              >
+                Todas
+                <span class="badge bg-secondary rounded-pill">{{ totalEventos() }}</span>
+              </button>
+              @for (categoria of categorias(); track categoria.id) {
+                <button
+                  class="list-group-item list-group-item-action bg-dark text-white border-secondary"
+                  [class.active]="categoriaSeleccionada() === categoria.id"
+                  (click)="onCategoriaChange(categoria.id)"
+                >
+                  <div class="d-flex align-items-center">
+                    <span 
+                      class="categoria-dot me-2" 
+                      [style.background-color]="categoria.color"
+                    ></span>
+                    {{ categoria.nombre }}
+                  </div>
+                </button>
+              }
+            </div>
+          </div>
+
+          <!-- Ordenar por -->
+          <div class="mb-4">
+            <label class="form-label text-white small">Ordenar por</label>
+            <select
+              class="form-select bg-dark text-white border-secondary"
+              [(ngModel)]="ordenSeleccionado"
+              (change)="onOrdenChange()"
+            >
+              <option value="fecha_inicio">Fecha (Próximos)</option>
+              <option value="created_at">Más recientes</option>
+              <option value="titulo">Nombre (A-Z)</option>
+              <option value="precio">Precio</option>
+            </select>
+          </div>
+
+          <!-- Botón limpiar filtros -->
+          <button 
+            class="btn btn-outline-light w-100"
+            (click)="limpiarFiltros()"
+          >
+            <i class="bi bi-x-circle me-2"></i>
+            Limpiar Filtros
+          </button>
+        </div>
+      </aside>
+
+      <!-- Contenido Principal -->
+      <main class="col-lg-9">
+        <!-- Loader -->
+        @if (cargando()) {
+          <div class="text-center py-5">
+            <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+              <span class="visually-hidden">Cargando...</span>
+            </div>
+            <p class="text-muted mt-3">Cargando eventos...</p>
+          </div>
+        }
+
+        <!-- Grid de Eventos -->
+        @if (!cargando() && eventosFiltrados().length > 0) {
+          <div class="row g-4 mb-5">
+            @for (evento of eventosFiltrados(); track evento.id) {
+              <div class="col-md-6 col-lg-4">
+                <article class="evento-card h-100">
+                  <div class="card bg-dark-secondary border-0 h-100">
+                    <!-- Imagen -->
+                    <div class="card-img-wrapper position-relative">
+                      @if (evento.imagenPrincipal || evento.imagenUrl) {
+                        <img
+                          [src]="obtenerImagenEvento(evento, evento.imagenPrincipal ? 'imagenPrincipal' : 'imagenUrl', 'mediano')"
+                          [alt]="evento.titulo"
+                          class="card-img-top"
+                        />
+                      } @else {
+                        <div class="card-img-top bg-secondary d-flex align-items-center justify-content-center">
+                          <i class="bi bi-calendar-event fs-1 text-muted"></i>
+                        </div>
+                      }
+                      
+                      <!-- Badge de destacado -->
+                      @if (evento.destacado) {
+                        <span class="badge bg-primary position-absolute top-0 end-0 m-3">
+                          <i class="bi bi-star-fill me-1"></i>
+                          Destacado
+                        </span>
+                      }
+
+                      <!-- Badge de precio -->
+                      <span class="badge position-absolute bottom-0 start-0 m-3"
+                            [class.bg-success]="evento.precio === 0"
+                            [class.bg-info]="evento.precio > 0">
+                        @if (evento.precio === 0) {
+                          <i class="bi bi-gift me-1"></i>Gratis
+                        } @else {
+                          ${{ evento.precio }}
+                        }
+                      </span>
+                    </div>
+
+                    <div class="card-body d-flex flex-column">
+                      <!-- Categoría -->
+                      @if (evento.categoria) {
+                        <div class="mb-2">
+                          <span 
+                            class="badge" 
+                            [style.background-color]="evento.categoria.color"
+                          >
+                            {{ evento.categoria.nombre }}
+                          </span>
+                        </div>
+                      }
+
+                      <!-- Título -->
+                      <h5 class="card-title text-white mb-2">
+                        <a 
+                          [routerLink]="['/eventos', evento.slug || evento.id]" 
+                          class="text-white text-decoration-none stretched-link"
+                        >
+                          {{ evento.titulo }}
+                        </a>
+                      </h5>
+
+                      <!-- Descripción corta -->
+                      <p class="card-text text-muted small mb-3 flex-grow-1">
+                        {{ (evento.descripcionCorta || evento.descripcion).substring(0, 100) }}
+                        @if ((evento.descripcionCorta || evento.descripcion).length > 100) {
+                          ...
+                        }
+                      </p>
+
+                      <!-- Info del evento -->
+                      <div class="evento-info">
+                        <div class="d-flex align-items-center text-muted small mb-2">
+                          <i class="bi bi-calendar3 me-2 text-primary-custom"></i>
+                          {{ formatearFecha(evento.fechaInicio) }}
+                        </div>
+                        <div class="d-flex align-items-center text-muted small mb-2">
+                          <i class="bi bi-geo-alt me-2 text-primary-custom"></i>
+                          {{ evento.ubicacion }}
+                        </div>
+                        @if (evento.horaInicio) {
+                          <div class="d-flex align-items-center text-muted small">
+                            <i class="bi bi-clock me-2 text-primary-custom"></i>
+                            {{ evento.horaInicio }}
+                          </div>
+                        }
+                      </div>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            }
+          </div>
+
+          <!-- Paginación -->
+          @if (totalPaginas() > 1) {
+            <nav aria-label="Paginación de eventos">
+              <ul class="pagination justify-content-center">
+                <li class="page-item" [class.disabled]="paginaActual() === 1">
+                  <button 
+                    class="page-link bg-dark text-white border-secondary" 
+                    (click)="cambiarPagina(paginaActual() - 1)"
+                    [disabled]="paginaActual() === 1"
+                  >
+                    <i class="bi bi-chevron-left"></i>
+                  </button>
+                </li>
+
+                @for (pagina of [].constructor(totalPaginas()); track $index; let i = $index) {
+                  <li class="page-item" [class.active]="paginaActual() === i + 1">
+                    <button 
+                      class="page-link bg-dark text-white border-secondary"
+                      (click)="cambiarPagina(i + 1)"
+                    >
+                      {{ i + 1 }}
+                    </button>
+                  </li>
+                }
+
+                <li class="page-item" [class.disabled]="paginaActual() === totalPaginas()">
+                  <button 
+                    class="page-link bg-dark text-white border-secondary" 
+                    (click)="cambiarPagina(paginaActual() + 1)"
+                    [disabled]="paginaActual() === totalPaginas()"
+                  >
+                    <i class="bi bi-chevron-right"></i>
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          }
+        }
+
+        <!-- Sin resultados -->
+        @if (!cargando() && eventosFiltrados().length === 0) {
+          <div class="text-center py-5">
+            <i class="bi bi-calendar-x display-1 text-muted mb-4"></i>
+            <h3 class="text-white mb-3">No se encontraron eventos</h3>
+            <p class="text-muted mb-4">
+              Intenta ajustar los filtros o buscar con otros términos
+            </p>
+            <button class="btn btn-primary" (click)="limpiarFiltros()">
+              Limpiar Filtros
+            </button>
+          </div>
+        }
+      </main>
+    </div>
+  </div>
+</div>

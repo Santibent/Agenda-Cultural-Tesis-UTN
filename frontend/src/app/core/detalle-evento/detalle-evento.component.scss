@@ -1,0 +1,95 @@
+.detalle-evento-page {
+  .evento-banner {
+    position: relative;
+    min-height: 60vh;
+    display: flex;
+    align-items: flex-end;
+    overflow: hidden;
+
+    .banner-image {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-size: cover;
+      background-position: center;
+      filter: brightness(0.4);
+    }
+
+    .banner-overlay {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(0, 0, 0, 0.3) 0%,
+        rgba(0, 0, 0, 0.8) 100%
+      );
+    }
+
+    .banner-content {
+      z-index: 1;
+    }
+  }
+
+  .breadcrumb {
+    background: transparent;
+    padding: 0;
+    margin: 0;
+
+    .breadcrumb-item {
+      a {
+        text-decoration: none;
+        transition: color 0.3s ease;
+
+        &:hover {
+          color: #E53935 !important;
+        }
+      }
+
+      &.active {
+        font-weight: 600;
+      }
+
+      + .breadcrumb-item::before {
+        color: rgba(255, 255, 255, 0.5);
+      }
+    }
+  }
+
+  .card {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+
+    .card-body {
+      h3, h4, h5 {
+        i {
+          vertical-align: middle;
+        }
+      }
+    }
+  }
+
+  .info-item {
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: translateX(5px);
+    }
+
+    i {
+      flex-shrink: 0;
+    }
+  }
+
+  .info-rapida {
+    font-size: 1.1rem;
+
+    @media (max-width: 768px) {
+      font-size: 0.9rem;
+    }
+  }
+}

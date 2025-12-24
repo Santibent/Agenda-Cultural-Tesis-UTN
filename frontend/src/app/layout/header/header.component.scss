@@ -1,0 +1,63 @@
+.header-principal {
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  backdrop-filter: blur(10px);
+  background-color: rgba(0, 0, 0, 0.95) !important;
+
+  .navbar-brand {
+    font-size: 1.5rem;
+    letter-spacing: -0.02em;
+    transition: transform 0.3s ease;
+
+    &:hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .nav-link {
+    color: rgba(255, 255, 255, 0.8);
+    font-weight: 500;
+    padding: 0.5rem 1rem;
+    transition: color 0.3s ease;
+    position: relative;
+
+    &:hover {
+      color: #E53935;
+    }
+
+    &.active {
+      color: #E53935;
+
+      &::after {
+        content: '';
+        position: absolute;
+        bottom: 0;
+        left: 1rem;
+        right: 1rem;
+        height: 2px;
+        background-color: #E53935;
+      }
+    }
+  }
+
+  .dropdown-menu {
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+
+    .dropdown-item {
+      &:hover {
+        background-color: rgba(229, 57, 53, 0.1);
+      }
+    }
+  }
+
+  @media (max-width: 991px) {
+    .navbar-collapse {
+      background-color: rgba(0, 0, 0, 0.98);
+      padding: 1rem;
+      margin-top: 1rem;
+      border-radius: 0.5rem;
+    }
+  }
+}

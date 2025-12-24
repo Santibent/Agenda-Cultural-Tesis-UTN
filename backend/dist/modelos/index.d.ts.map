@@ -1,0 +1,1 @@
+{"version":3,"file":"index.d.ts","sourceRoot":"","sources":["../../src/modelos/index.ts"],"names":[],"mappings":"AAAA;;GAEG;AACH,OAAO,OAAO,MAAM,kBAAkB,CAAC;AACvC,OAAO,SAAS,MAAM,oBAAoB,CAAC;AAC3C,OAAO,MAAM,MAAM,iBAAiB,CAAC;AACrC,OAAO,KAAK,MAAM,gBAAgB,CAAC;AACnC,OAAO,cAAc,MAAM,0BAA0B,CAAC;AAkCtD,OAAO,EACL,OAAO,EACP,SAAS,EACT,MAAM,EACN,KAAK,EACL,cAAc,GACf,CAAC"}

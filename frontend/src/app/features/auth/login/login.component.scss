@@ -1,0 +1,32 @@
+.login-page {
+  background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
+
+  .card {
+    border-radius: 1rem;
+    backdrop-filter: blur(10px);
+  }
+
+  .form-control {
+    &:focus {
+      background-color: #2a2a2a;
+      border-color: #E53935;
+      color: white;
+      box-shadow: 0 0 0 0.2rem rgba(229, 57, 53, 0.25);
+    }
+
+    &::placeholder {
+      color: #6c757d;
+    }
+  }
+
+  .btn-outline-secondary {
+    color: #6c757d;
+    border-color: #6c757d;
+
+    &:hover {
+      background-color: #2a2a2a;
+      border-color: #E53935;
+      color: #E53935;
+    }
+  }
+}

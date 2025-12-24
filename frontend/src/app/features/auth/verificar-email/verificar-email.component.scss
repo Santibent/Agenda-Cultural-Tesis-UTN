@@ -1,0 +1,17 @@
+.card {
+  border-radius: 1rem;
+  
+  .card-body {
+    padding: 3rem 2rem;
+  }
+}
+
+.spinner-border {
+  border-width: 0.35rem;
+}
+
+@media (max-width: 576px) {
+  .card .card-body {
+    padding: 2rem 1.5rem;
+  }
+}

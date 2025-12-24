@@ -1,0 +1,243 @@
+<div class="mis-solicitudes-page bg-dark-custom min-vh-100 py-5">
+  <div class="container">
+    <!-- Header -->
+    <div class="row mb-5">
+      <div class="col-lg-8">
+        <h1 class="display-4 text-white mb-3">
+          Mis <span class="text-primary-custom">Solicitudes</span>
+        </h1>
+        <p class="lead text-muted">
+          Gestiona y revisa el estado de tus solicitudes de diseño
+        </p>
+      </div>
+      <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+        <a routerLink="/solicitar-flyer" class="btn btn-primary btn-lg">
+          <i class="bi bi-plus-circle me-2"></i>
+          Nueva Solicitud
+        </a>
+      </div>
+    </div>
+
+    <!-- Estadísticas -->
+    <div class="row g-4 mb-5">
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card bg-dark-secondary p-4 rounded border border-secondary">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="text-muted small mb-1">Total</div>
+              <div class="h3 text-white mb-0">{{ estadisticas().total }}</div>
+            </div>
+            <i class="bi bi-file-earmark-text fs-1 text-primary-custom opacity-50"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card bg-dark-secondary p-4 rounded border border-warning">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="text-muted small mb-1">Pendientes</div>
+              <div class="h3 text-warning mb-0">{{ estadisticas().pendientes }}</div>
+            </div>
+            <i class="bi bi-clock-history fs-1 text-warning opacity-50"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card bg-dark-secondary p-4 rounded border border-primary">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="text-muted small mb-1">En Proceso</div>
+              <div class="h3 text-primary mb-0">{{ estadisticas().enProceso }}</div>
+            </div>
+            <i class="bi bi-gear fs-1 text-primary opacity-50"></i>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6 col-lg-3">
+        <div class="stat-card bg-dark-secondary p-4 rounded border border-success">
+          <div class="d-flex align-items-center justify-content-between">
+            <div>
+              <div class="text-muted small mb-1">Completadas</div>
+              <div class="h3 text-success mb-0">{{ estadisticas().completadas }}</div>
+            </div>
+            <i class="bi bi-check-circle fs-1 text-success opacity-50"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Filtros -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="btn-group" role="group">
+          <button 
+            type="button" 
+            class="btn btn-outline-light"
+            [class.active]="filtroEstado() === 'todas'"
+            (click)="cambiarFiltro('todas')"
+          >
+            Todas
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-outline-light"
+            [class.active]="filtroEstado() === 'pendiente'"
+            (click)="cambiarFiltro('pendiente')"
+          >
+            Pendientes
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-outline-light"
+            [class.active]="filtroEstado() === 'en_proceso'"
+            (click)="cambiarFiltro('en_proceso')"
+          >
+            En Proceso
+          </button>
+          <button 
+            type="button" 
+            class="btn btn-outline-light"
+            [class.active]="filtroEstado() === 'completado'"
+            (click)="cambiarFiltro('completado')"
+          >
+            Completadas
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Loader -->
+    @if (cargando()) {
+      <div class="text-center py-5">
+        <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+          <span class="visually-hidden">Cargando...</span>
+        </div>
+        <p class="text-muted mt-3">Cargando solicitudes...</p>
+      </div>
+    }
+
+    <!-- Lista de Solicitudes -->
+    @if (!cargando() && solicitudesFiltradas().length > 0) {
+      <div class="row g-4">
+        @for (solicitud of solicitudesFiltradas(); track solicitud.id) {
+          <div class="col-12">
+            <div class="card bg-dark-secondary border-0 solicitud-card">
+              <div class="card-body p-4">
+                <div class="row align-items-center">
+                  <!-- Información -->
+                  <div class="col-lg-8">
+                    <div class="d-flex align-items-start mb-3">
+                      <div class="flex-grow-1">
+                        <h4 class="text-white mb-2">{{ solicitud.nombreEvento }}</h4>
+                        <div class="d-flex flex-wrap gap-3 text-muted small">
+                          @if (solicitud.tipoEvento) {
+                            <span>
+                              <i class="bi bi-tag me-1"></i>
+                              {{ solicitud.tipoEvento }}
+                            </span>
+                          }
+                          @if (solicitud.fechaEvento) {
+                            <span>
+                              <i class="bi bi-calendar3 me-1"></i>
+                              {{ formatearFecha(solicitud.fechaEvento) }}
+                            </span>
+                          }
+                          <span>
+                            <i class="bi bi-clock me-1"></i>
+                            Creada: {{ formatearFecha(solicitud.createdAt) }}
+                          </span>
+                        </div>
+                      </div>
+                      <span 
+                        class="badge fs-6"
+                        [ngClass]="obtenerClaseEstado(solicitud.estado)"
+                      >
+                        <i [class]="'bi ' + obtenerIconoEstado(solicitud.estado) + ' me-1'"></i>
+                        {{ obtenerTextoEstado(solicitud.estado) }}
+                      </span>
+                    </div>
+
+                    <p class="text-muted mb-3">
+                      {{ solicitud.descripcion.substring(0, 150) }}
+                      @if (solicitud.descripcion.length > 150) {
+                        ...
+                      }
+                    </p>
+
+                    <!-- Detalles adicionales -->
+                    <div class="detalles-solicitud">
+                      @if (solicitud.presupuesto) {
+                        <span class="badge bg-info me-2">
+                          <i class="bi bi-currency-dollar me-1"></i>
+                          ${{ solicitud.presupuesto }}
+                        </span>
+                      }
+                      @if (solicitud.prioridad) {
+                        <span 
+                          class="badge me-2"
+                          [class.bg-danger]="solicitud.prioridad === 'urgente'"
+                          [class.bg-warning]="solicitud.prioridad === 'alta'"
+                          [class.bg-secondary]="solicitud.prioridad === 'media' || solicitud.prioridad === 'baja'"
+                        >
+                          {{ solicitud.prioridad.toUpperCase() }}
+                        </span>
+                      }
+                    </div>
+                  </div>
+
+                  <!-- Acciones -->
+                  <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+                    <div class="d-flex flex-column gap-2">
+                      <button class="btn btn-outline-light btn-sm">
+                        <i class="bi bi-eye me-2"></i>
+                        Ver Detalles
+                      </button>
+                      @if (solicitud.estado === 'pendiente' || solicitud.estado === 'revisando') {
+                        <button 
+                          class="btn btn-outline-danger btn-sm"
+                          (click)="cancelarSolicitud(solicitud.id)"
+                        >
+                          <i class="bi bi-x-circle me-2"></i>
+                          Cancelar
+                        </button>
+                      }
+                      @if (solicitud.estado === 'completado' && solicitud.archivoResultado) {
+                        <a 
+                          [href]="solicitud.archivoResultado" 
+                          target="_blank"
+                          class="btn btn-success btn-sm"
+                        >
+                          <i class="bi bi-download me-2"></i>
+                          Descargar
+                        </a>
+                      }
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        }
+      </div>
+    }
+
+    <!-- Sin solicitudes -->
+    @if (!cargando() && solicitudesFiltradas().length === 0) {
+      <div class="text-center py-5">
+        <i class="bi bi-inbox display-1 text-muted mb-4"></i>
+        <h3 class="text-white mb-3">No hay solicitudes</h3>
+        <p class="text-muted mb-4">
+          @if (filtroEstado() === 'todas') {
+            Aún no has creado ninguna solicitud de diseño
+          } @else {
+            No hay solicitudes con el filtro seleccionado
+          }
+        </p>
+        <a routerLink="/solicitar-flyer" class="btn btn-primary">
+          <i class="bi bi-plus-circle me-2"></i>
+          Crear Primera Solicitud
+        </a>
+      </div>
+    }
+  </div>
+</div>

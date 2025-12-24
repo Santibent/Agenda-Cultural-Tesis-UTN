@@ -1,0 +1,46 @@
+
+
+services:
+  # Base de datos MySQL
+  mysql:
+    image: mysql:8.0
+    container_name: agenda-cultural-mysql
+    restart: unless-stopped
+    command: --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    environment:
+      MYSQL_ROOT_PASSWORD: root_password_seguro_2024
+      MYSQL_DATABASE: agenda_cultural_db
+      MYSQL_USER: agenda_user
+      MYSQL_PASSWORD: agenda_password_2024
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+      - ./docker/mysql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - agenda-network
+
+  # phpMyAdmin (opcional, para administrar BD visualmente)
+  phpmyadmin:
+    image: phpmyadmin:latest
+    container_name: agenda-cultural-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: root
+      PMA_PASSWORD: root_password_seguro_2024
+    ports:
+      - "8080:80"
+    depends_on:
+      - mysql
+    networks:
+      - agenda-network
+
+volumes:
+  mysql_data:
+    driver: local
+
+networks:
+  agenda-network:
+    driver: bridge

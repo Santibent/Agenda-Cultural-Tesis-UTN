@@ -1,0 +1,21 @@
+.footer {
+  margin-top: auto;
+
+  a {
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: #E53935 !important;
+      transform: translateX(5px);
+    }
+  }
+
+  .social-links a {
+    transition: all 0.3s ease;
+
+    &:hover {
+      color: #E53935 !important;
+      transform: translateY(-3px);
+    }
+  }
+}

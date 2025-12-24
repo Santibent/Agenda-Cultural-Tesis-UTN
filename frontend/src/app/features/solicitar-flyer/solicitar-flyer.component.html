@@ -1,0 +1,414 @@
+<div class="solicitar-flyer-page bg-dark-custom min-vh-100 py-5">
+  <div class="container">
+    <!-- Mensaje de éxito -->
+    @if (exito()) {
+      <div class="row justify-content-center">
+        <div class="col-lg-6">
+          <div class="card bg-dark-secondary border-0 shadow-lg text-center">
+            <div class="card-body p-5">
+              <div class="success-icon mb-4">
+                <i class="bi bi-check-circle-fill text-success" style="font-size: 5rem;"></i>
+              </div>
+              <h2 class="text-white mb-3">¡Solicitud Enviada!</h2>
+              <p class="text-muted mb-4">
+                Hemos recibido tu solicitud correctamente. Nos pondremos en contacto contigo pronto.
+              </p>
+              <p class="text-muted small">
+                Redirigiendo a tus solicitudes...
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+    } @else {
+      <!-- Header -->
+      <div class="row mb-5">
+        <div class="col-12 text-center">
+          <h1 class="display-4 text-white mb-3">
+            Solicitar <span class="text-primary-custom">Diseño de Flyer</span>
+          </h1>
+          <p class="lead text-muted">
+            Completa el formulario y te crearemos un diseño único para tu evento
+          </p>
+        </div>
+      </div>
+
+      <!-- Indicador de pasos -->
+      <div class="row mb-5">
+        <div class="col-12">
+          <div class="steps-indicator">
+            <div class="step" [class.active]="pasoActual() >= 1" [class.completed]="pasoActual() > 1">
+              <div class="step-circle" (click)="irAPaso(1)">
+                @if (pasoActual() > 1) {
+                  <i class="bi bi-check-lg"></i>
+                } @else {
+                  1
+                }
+              </div>
+              <div class="step-label">Información del Evento</div>
+            </div>
+            <div class="step-line" [class.completed]="pasoActual() > 1"></div>
+            
+            <div class="step" [class.active]="pasoActual() >= 2" [class.completed]="pasoActual() > 2">
+              <div class="step-circle" (click)="irAPaso(2)">
+                @if (pasoActual() > 2) {
+                  <i class="bi bi-check-lg"></i>
+                } @else {
+                  2
+                }
+              </div>
+              <div class="step-label">Detalles del Diseño</div>
+            </div>
+            <div class="step-line" [class.completed]="pasoActual() > 2"></div>
+            
+            <div class="step" [class.active]="pasoActual() >= 3">
+              <div class="step-circle">3</div>
+              <div class="step-label">Contacto y Presupuesto</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mensaje de error -->
+      @if (error()) {
+        <div class="row mb-4">
+          <div class="col-12">
+            <div class="alert alert-danger d-flex align-items-center">
+              <i class="bi bi-exclamation-triangle-fill me-3 fs-4"></i>
+              <div>{{ error() }}</div>
+            </div>
+          </div>
+        </div>
+      }
+
+      <!-- Formulario -->
+      <div class="row justify-content-center">
+        <div class="col-lg-8">
+          <form [formGroup]="solicitudForm" (ngSubmit)="onSubmit()">
+            <div class="card bg-dark-secondary border-0 shadow-lg">
+              <div class="card-body p-4 p-md-5">
+                
+                <!-- Paso 1: Información del Evento -->
+                @if (pasoActual() === 1) {
+                  <div class="paso-contenido">
+                    <h3 class="text-white mb-4">
+                      <i class="bi bi-calendar-event text-primary-custom me-2"></i>
+                      Información del Evento
+                    </h3>
+
+                    <!-- Nombre del Evento -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Nombre del Evento <span class="text-danger">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control form-control-lg bg-dark text-white border-secondary"
+                        formControlName="nombreEvento"
+                        placeholder="Ej: Fiesta de Graduación 2026"
+                        [class.is-invalid]="nombreEvento?.invalid && nombreEvento?.touched"
+                      />
+                      @if (nombreEvento?.invalid && nombreEvento?.touched) {
+                        <div class="invalid-feedback">
+                          @if (nombreEvento?.errors?.['required']) {
+                            El nombre del evento es obligatorio
+                          }
+                          @if (nombreEvento?.errors?.['minlength']) {
+                            Mínimo 3 caracteres
+                          }
+                        </div>
+                      }
+                    </div>
+
+                    <!-- Tipo de Evento -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Tipo de Evento <span class="text-danger">*</span>
+                      </label>
+                      <select
+                        class="form-select form-select-lg bg-dark text-white border-secondary"
+                        formControlName="tipoEvento"
+                        [class.is-invalid]="tipoEvento?.invalid && tipoEvento?.touched"
+                      >
+                        <option value="">Selecciona un tipo</option>
+                        <option value="Fiesta">Fiesta</option>
+                        <option value="Concierto">Concierto</option>
+                        <option value="Festival">Festival</option>
+                        <option value="Conferencia">Conferencia</option>
+                        <option value="Taller">Taller</option>
+                        <option value="Exposición">Exposición</option>
+                        <option value="Teatro">Teatro</option>
+                        <option value="Deportivo">Deportivo</option>
+                        <option value="Corporativo">Corporativo</option>
+                        <option value="Otro">Otro</option>
+                      </select>
+                      @if (tipoEvento?.invalid && tipoEvento?.touched) {
+                        <div class="invalid-feedback">
+                          Selecciona el tipo de evento
+                        </div>
+                      }
+                    </div>
+
+                    <!-- Fecha del Evento -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Fecha del Evento <span class="text-danger">*</span>
+                      </label>
+                      <input
+                        type="date"
+                        class="form-control form-control-lg bg-dark text-white border-secondary"
+                        formControlName="fechaEvento"
+                        [class.is-invalid]="fechaEvento?.invalid && fechaEvento?.touched"
+                      />
+                      @if (fechaEvento?.invalid && fechaEvento?.touched) {
+                        <div class="invalid-feedback">
+                          La fecha del evento es obligatoria
+                        </div>
+                      }
+                    </div>
+                  </div>
+                }
+
+                <!-- Paso 2: Detalles del Diseño -->
+                @if (pasoActual() === 2) {
+                  <div class="paso-contenido">
+                    <h3 class="text-white mb-4">
+                      <i class="bi bi-palette text-primary-custom me-2"></i>
+                      Detalles del Diseño
+                    </h3>
+
+                    <!-- Descripción -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Descripción del Evento <span class="text-danger">*</span>
+                      </label>
+                      <textarea
+                        class="form-control bg-dark text-white border-secondary"
+                        formControlName="descripcion"
+                        rows="4"
+                        placeholder="Describe tu evento y qué te gustaría transmitir con el diseño..."
+                        [class.is-invalid]="descripcion?.invalid && descripcion?.touched"
+                      ></textarea>
+                      <small class="text-muted">Mínimo 20 caracteres</small>
+                      @if (descripcion?.invalid && descripcion?.touched) {
+                        <div class="invalid-feedback">
+                          @if (descripcion?.errors?.['required']) {
+                            La descripción es obligatoria
+                          }
+                          @if (descripcion?.errors?.['minlength']) {
+                            Mínimo 20 caracteres
+                          }
+                        </div>
+                      }
+                    </div>
+
+                    <!-- Información a Incluir -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Información a Incluir <span class="text-danger">*</span>
+                      </label>
+                      <textarea
+                        class="form-control bg-dark text-white border-secondary"
+                        formControlName="informacionIncluir"
+                        rows="3"
+                        placeholder="Fecha, hora, lugar, precio, contacto, código de vestimenta, etc."
+                        [class.is-invalid]="informacionIncluir?.invalid && informacionIncluir?.touched"
+                      ></textarea>
+                      @if (informacionIncluir?.invalid && informacionIncluir?.touched) {
+                        <div class="invalid-feedback">
+                          Indica qué información debe incluir el flyer
+                        </div>
+                      }
+                    </div>
+
+                    <!-- Referencias -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Referencias o Inspiración
+                      </label>
+                      <textarea
+                        class="form-control bg-dark text-white border-secondary"
+                        formControlName="referencias"
+                        rows="2"
+                        placeholder="Enlaces a diseños que te gusten, estilos de referencia..."
+                      ></textarea>
+                      <small class="text-muted">Opcional</small>
+                    </div>
+
+                    <!-- Colores Preferidos -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Colores Preferidos
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control bg-dark text-white border-secondary"
+                        formControlName="coloresPreferidos"
+                        placeholder="Ej: Azul, dorado, blanco"
+                      />
+                      <small class="text-muted">Opcional</small>
+                    </div>
+
+                    <!-- Estilo Preferido -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Estilo Preferido
+                      </label>
+                      <input
+                        type="text"
+                        class="form-control bg-dark text-white border-secondary"
+                        formControlName="estiloPreferido"
+                        placeholder="Ej: Minimalista, moderno, vintage, elegante"
+                      />
+                      <small class="text-muted">Opcional</small>
+                    </div>
+                  </div>
+                }
+
+                <!-- Paso 3: Contacto y Presupuesto -->
+                @if (pasoActual() === 3) {
+                  <div class="paso-contenido">
+                    <h3 class="text-white mb-4">
+                      <i class="bi bi-person-lines-fill text-primary-custom me-2"></i>
+                      Contacto y Presupuesto
+                    </h3>
+
+                    <!-- Email -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Email de Contacto <span class="text-danger">*</span>
+                      </label>
+                      <input
+                        type="email"
+                        class="form-control form-control-lg bg-dark text-white border-secondary"
+                        formControlName="contactoEmail"
+                        placeholder="tu@email.com"
+                        [class.is-invalid]="contactoEmail?.invalid && contactoEmail?.touched"
+                      />
+                      @if (contactoEmail?.invalid && contactoEmail?.touched) {
+                        <div class="invalid-feedback">
+                          @if (contactoEmail?.errors?.['required']) {
+                            El email es obligatorio
+                          }
+                          @if (contactoEmail?.errors?.['email']) {
+                            Ingresa un email válido
+                          }
+                        </div>
+                      }
+                    </div>
+
+                    <!-- Teléfono -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Teléfono
+                      </label>
+                      <input
+                        type="tel"
+                        class="form-control bg-dark text-white border-secondary"
+                        formControlName="contactoTelefono"
+                        placeholder="+54 3462 123456"
+                      />
+                      <small class="text-muted">Opcional</small>
+                    </div>
+
+                    <!-- WhatsApp -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        WhatsApp
+                      </label>
+                      <input
+                        type="tel"
+                        class="form-control bg-dark text-white border-secondary"
+                        formControlName="contactoWhatsapp"
+                        placeholder="+54 9 3462 123456"
+                      />
+                      <small class="text-muted">Opcional</small>
+                    </div>
+
+                    <!-- Presupuesto -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Presupuesto Aproximado (ARS)
+                      </label>
+                      <input
+                        type="number"
+                        class="form-control bg-dark text-white border-secondary"
+                        formControlName="presupuesto"
+                        placeholder="3000"
+                        min="0"
+                        [class.is-invalid]="presupuesto?.invalid && presupuesto?.touched"
+                      />
+                      <small class="text-muted">Opcional - Ayúdanos a ajustar tu diseño</small>
+                      @if (presupuesto?.invalid && presupuesto?.touched) {
+                        <div class="invalid-feedback">
+                          El presupuesto debe ser mayor a 0
+                        </div>
+                      }
+                    </div>
+
+                    <!-- Fecha Límite -->
+                    <div class="mb-4">
+                      <label class="form-label text-white">
+                        Fecha Límite de Entrega
+                      </label>
+                      <input
+                        type="date"
+                        class="form-control bg-dark text-white border-secondary"
+                        formControlName="fechaLimite"
+                      />
+                      <small class="text-muted">Opcional</small>
+                    </div>
+                  </div>
+                }
+
+                <!-- Botones de navegación -->
+                <div class="d-flex justify-content-between mt-5 pt-4 border-top border-secondary">
+                  @if (pasoActual() > 1) {
+                    <button 
+                      type="button" 
+                      class="btn btn-outline-light"
+                      (click)="pasoAnterior()"
+                    >
+                      <i class="bi bi-arrow-left me-2"></i>
+                      Anterior
+                    </button>
+                  } @else {
+                    <a routerLink="/portfolio" class="btn btn-outline-light">
+                      <i class="bi bi-arrow-left me-2"></i>
+                      Ver Portfolio
+                    </a>
+                  }
+
+                  @if (pasoActual() < totalPasos) {
+                    <button 
+                      type="button" 
+                      class="btn btn-primary"
+                      (click)="siguientePaso()"
+                    >
+                      Siguiente
+                      <i class="bi bi-arrow-right ms-2"></i>
+                    </button>
+                  } @else {
+                    <button 
+                      type="submit" 
+                      class="btn btn-primary btn-lg"
+                      [disabled]="cargando()"
+                    >
+                      @if (cargando()) {
+                        <span class="spinner-border spinner-border-sm me-2"></span>
+                        Enviando...
+                      } @else {
+                        <i class="bi bi-send me-2"></i>
+                        Enviar Solicitud
+                      }
+                    </button>
+                  }
+                </div>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    }
+  </div>
+</div>

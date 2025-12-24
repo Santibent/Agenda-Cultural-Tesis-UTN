@@ -1,0 +1,28 @@
+@if (type === 'card') {
+  <div class="skeleton-card">
+    <div class="skeleton skeleton-image"></div>
+    <div class="skeleton-content">
+      <div class="skeleton skeleton-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text short"></div>
+    </div>
+  </div>
+} @else if (type === 'event-card') {
+  <div class="skeleton-event-card">
+    <div class="skeleton skeleton-event-image"></div>
+    <div class="skeleton-event-content">
+      <div class="skeleton skeleton-badge"></div>
+      <div class="skeleton skeleton-event-title"></div>
+      <div class="skeleton skeleton-text"></div>
+      <div class="skeleton skeleton-text short"></div>
+      <div class="skeleton-event-footer">
+        <div class="skeleton skeleton-icon"></div>
+        <div class="skeleton skeleton-icon"></div>
+      </div>
+    </div>
+  </div>
+} @else {
+  @for (item of items; track $index) {
+    <div class="skeleton" [ngStyle]="getStyle()"></div>
+  }
+}

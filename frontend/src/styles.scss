@@ -1,0 +1,196 @@
+/* ============================================
+   IMPORTS
+   ============================================ */
+@use './app/shared/styles/animations.scss';
+
+/* ============================================
+   VARIABLES GLOBALES - TEMA OSCURO
+   ============================================ */
+
+// Colores principales
+$color-primario: #E53935;      // Rojo principal
+$color-secundario: #FFFFFF;    // Blanco
+$color-fondo: #000000;         // Negro puro
+$color-fondo-secundario: #1a1a1a;
+$color-texto: #FFFFFF;
+$color-texto-secundario: #B0B0B0;
+
+// Tipografía
+$fuente-principal: 'Montserrat', 'Avant Garde Gothic', 'Century Gothic', 'Futura', -apple-system, BlinkMacSystemFont, sans-serif;
+
+// Bootstrap override
+$primary: $color-primario;
+$secondary: $color-fondo-secundario;
+$dark: $color-fondo;
+$light: $color-texto;
+
+
+/* ============================================
+   RESET Y BASE
+   ============================================ */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  scroll-behavior: smooth;
+}
+
+body {
+  height: 100%;
+  width: 100%;
+  overflow-x: hidden;
+  font-family: $fuente-principal;
+  background-color: $color-fondo;
+  color: $color-texto;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ============================================
+   TIPOGRAFÍA
+   ============================================ */
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: $fuente-principal;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin-bottom: 1rem;
+}
+
+h1 {
+  font-size: clamp(2.5rem, 8vw, 6rem);
+  line-height: 0.95;
+}
+
+h2 {
+  font-size: clamp(2rem, 6vw, 4rem);
+  line-height: 1;
+}
+
+h3 {
+  font-size: clamp(1.5rem, 4vw, 2.5rem);
+}
+
+p {
+  margin-bottom: 1rem;
+}
+
+.text-muted {
+  color: #CCCCCC !important;
+}
+
+/* ============================================
+   ENLACES Y BOTONES
+   ============================================ */
+
+a {
+  color: $color-texto;
+  text-decoration: none;
+  transition: color 0.3s ease;
+
+  &:hover {
+    color: $color-primario;
+  }
+}
+
+.btn-primary {
+  background-color: $color-primario;
+  border-color: $color-primario;
+  color: $color-secundario;
+  font-weight: 600;
+  padding: 0.75rem 2rem;
+  border-radius: 0;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background-color: #C62828;
+    border-color: #C62828;
+    transform: translateY(-2px);
+  }
+}
+
+/* ============================================
+   UTILIDADES
+   ============================================ */
+
+.text-primary-custom {
+  color: $color-primario !important;
+}
+
+.bg-dark-custom {
+  background-color: $color-fondo !important;
+}
+
+.bg-dark-secondary {
+  background-color: $color-fondo-secundario !important;
+}
+
+/* ============================================
+   ANIMACIONES SUAVES
+   ============================================ */
+
+.fade-in {
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.slide-in-left {
+  animation: slideInLeft 0.8s ease-out;
+}
+
+@keyframes slideInLeft {
+  from {
+    opacity: 0;
+    transform: translateX(-100px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* ============================================
+   SCROLLBAR PERSONALIZADO
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: $color-fondo;
+}
+
+::-webkit-scrollbar-thumb {
+  background: $color-primario;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #C62828;
+}

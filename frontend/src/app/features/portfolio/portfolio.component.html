@@ -1,0 +1,223 @@
+<div class="portfolio-page bg-dark-custom min-vh-100">
+  
+  <!-- Header de la página -->
+  <section class="page-header bg-dark-secondary py-5">
+    <div class="container">
+      <div class="row align-items-center">
+        <div class="col-lg-8">
+          <h1 class="display-4 text-white mb-3">
+            <span class="text-primary-custom">Portfolio</span> de Diseños
+          </h1>
+          <p class="lead text-muted mb-0">
+            Explora nuestra colección de flyers y diseños personalizados
+          </p>
+        </div>
+        <div class="col-lg-4 text-lg-end mt-3 mt-lg-0">
+          <a routerLink="/solicitar-flyer" class="btn btn-primary btn-lg">
+            <i class="bi bi-plus-circle me-2"></i>
+            Solicitar Diseño
+          </a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Flyers Destacados -->
+  @if (flyersDestacados().length > 0) {
+    <section class="py-5 bg-dark-secondary position-relative overflow-hidden">
+       <div class="gif-fondo-destacados"></div>
+      <div class="container">
+        <h2 class="text-white mb-4">
+          <i class="bi bi-star-fill text-primary-custom me-2"></i>
+          Diseños Destacados
+        </h2>
+        <div class="row g-4">
+          @for (flyer of flyersDestacados(); track flyer.id) {
+            <div class="col-md-6 col-lg-3">
+              <div 
+                class="flyer-card destacado" 
+                (click)="abrirModal(flyer)"
+              >
+                <div class="flyer-image-wrapper">
+                  <img
+                    [src]="obtenerThumbnail(flyer)"
+                    [alt]="flyer.titulo"
+                    class="flyer-image"
+                  />
+                  <div class="flyer-overlay">
+                    <i class="bi bi-zoom-in fs-1"></i>
+                  </div>
+                  <span class="badge bg-primary position-absolute top-0 end-0 m-3">
+                    <i class="bi bi-star-fill me-1"></i>
+                    Destacado
+                  </span>
+                </div>
+                <div class="flyer-info p-3">
+                  <h5 class="text-white mb-2">{{ flyer.titulo }}</h5>
+                  @if (flyer.descripcion) {
+                    <p class="text-muted small mb-0">{{ flyer.descripcion }}</p>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      </div>
+    </section>
+  }
+
+  <!-- Galería de Flyers -->
+  <section class="py-5">
+    <div class="container">
+      <h2 class="text-white mb-4">
+        <i class="bi bi-images text-primary-custom me-2"></i>
+        Galería Completa
+      </h2>
+
+      <!-- Loader -->
+      @if (cargando()) {
+        <div class="text-center py-5">
+          <div class="spinner-border text-primary" role="status" style="width: 3rem; height: 3rem;">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+          <p class="text-muted mt-3">Cargando diseños...</p>
+        </div>
+      }
+
+      <!-- Grid de Flyers -->
+      @if (!cargando() && flyers().length > 0) {
+        <div class="row g-4">
+          @for (flyer of flyers(); track flyer.id) {
+            <div class="col-sm-6 col-md-4 col-lg-3">
+              <div 
+                class="flyer-card" 
+                (click)="abrirModal(flyer)"
+              >
+                <div class="flyer-image-wrapper">
+                  <img
+                    [src]="obtenerThumbnail(flyer)"
+                    [alt]="flyer.titulo"
+                    class="flyer-image"
+                  />
+                  <div class="flyer-overlay">
+                    <i class="bi bi-zoom-in fs-1"></i>
+                  </div>
+                  @if (flyer.destacado) {
+                    <span class="badge bg-primary position-absolute top-0 end-0 m-2">
+                      <i class="bi bi-star-fill"></i>
+                    </span>
+                  }
+                </div>
+                <div class="flyer-info p-3">
+                  <h6 class="text-white mb-1">{{ flyer.titulo }}</h6>
+                  @if (flyer.etiquetas && flyer.etiquetas.length > 0) {
+                    <div class="etiquetas mt-2">
+                      @for (etiqueta of flyer.etiquetas.slice(0, 3); track etiqueta) {
+                        <span class="badge bg-secondary me-1">{{ etiqueta }}</span>
+                      }
+                    </div>
+                  }
+                </div>
+              </div>
+            </div>
+          }
+        </div>
+      }
+
+      <!-- Sin resultados -->
+      @if (!cargando() && flyers().length === 0) {
+        <div class="text-center py-5">
+          <i class="bi bi-image display-1 text-muted mb-4"></i>
+          <h3 class="text-white mb-3">No hay diseños disponibles</h3>
+          <p class="text-muted mb-4">
+            Pronto agregaremos nuevos diseños a nuestro portfolio
+          </p>
+          <a routerLink="/solicitar-flyer" class="btn btn-primary">
+            Solicitar un Diseño Personalizado
+          </a>
+        </div>
+      }
+    </div>
+  </section>
+
+  <!-- Call to Action -->
+  <section class="cta-section py-5 bg-primary text-white text-center">
+    <div class="container">
+      <h2 class="mb-3">¿Te gustó algún diseño?</h2>
+      <p class="lead mb-4">
+        Solicita tu flyer personalizado y destaca en tu próximo evento
+      </p>
+      <a routerLink="/solicitar-flyer" class="btn btn-light btn-lg">
+        <i class="bi bi-pencil-square me-2"></i>
+        Solicitar Diseño Ahora
+      </a>
+    </div>
+  </section>
+</div>
+
+<!-- Modal de Flyer -->
+@if (flyerSeleccionado()) {
+  <div 
+    class="modal-lightbox fade show d-block" 
+    (click)="cerrarModal()"
+    (keydown)="onKeydown($event)"
+    tabindex="0"
+  >
+    <div class="modal-lightbox-overlay"></div>
+    <div class="modal-lightbox-content" (click)="$event.stopPropagation()">
+      <button 
+        class="btn-close-lightbox"
+        (click)="cerrarModal()"
+        aria-label="Cerrar"
+      >
+        <i class="bi bi-x-lg"></i>
+      </button>
+
+      <div class="lightbox-body">
+        <div class="row align-items-center">
+          <div class="col-lg-8">
+            <img
+              [src]="obtenerImagenFlyer(flyerSeleccionado()!, 'grande')"
+              [alt]="flyerSeleccionado()!.titulo"
+              class="img-fluid rounded"
+            />
+          </div>
+          <div class="col-lg-4 mt-4 mt-lg-0">
+            <h3 class="text-white mb-3">{{ flyerSeleccionado()!.titulo }}</h3>
+            
+            @if (flyerSeleccionado()!.descripcion) {
+              <p class="text-muted mb-4">
+                {{ flyerSeleccionado()!.descripcion }}
+              </p>
+            }
+
+            @if (flyerSeleccionado()!.etiquetas && flyerSeleccionado()!.etiquetas!.length > 0) {
+              <div class="mb-4">
+                <h6 class="text-white mb-2">Etiquetas:</h6>
+                <div class="d-flex flex-wrap gap-2">
+                  @for (etiqueta of flyerSeleccionado()!.etiquetas; track etiqueta) {
+                    <span class="badge bg-secondary">{{ etiqueta }}</span>
+                  }
+                </div>
+              </div>
+            }
+
+            <div class="d-grid gap-2">
+              <a 
+                routerLink="/solicitar-flyer" 
+                class="btn btn-primary"
+                (click)="cerrarModal()"
+              >
+                <i class="bi bi-pencil-square me-2"></i>
+                Solicitar Diseño Similar
+              </a>
+              <button class="btn btn-outline-light" (click)="cerrarModal()">
+                Cerrar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+}
